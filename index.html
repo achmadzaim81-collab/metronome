@@ -7,30 +7,25 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{
-  --bg:#08080f;
-  --glass:rgba(255,255,255,0.065);
-  --glass-b:rgba(255,255,255,0.11);
-  --glass-b2:rgba(255,255,255,0.22);
+  --bg:#000000;
+  --glass:rgba(28,28,30,0.7);
+  --glass-b:rgba(255,255,255,0.08);
+  --glass-b2:rgba(255,255,255,0.15);
   --accent:#0A84FF;
   --green:#30D158;
   --red:#FF453A;
-  --t1:#fff;--t2:rgba(255,255,255,.52);--t3:rgba(255,255,255,.26);
-  --sep:rgba(255,255,255,.07);
-  --blur:blur(28px) saturate(180%);
+  --t1:#ffffff;--t2:rgba(235,235,245,0.6);--t3:rgba(235,235,245,0.3);
+  --sep:rgba(84,84,88,0.3);
+  --blur:blur(40px) saturate(200%);
 }
 html,body{height:100%;overflow:hidden;background:var(--bg)}
-body{font-family:-apple-system,system-ui,sans-serif;color:var(--t1);
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--t1);
   display:flex;justify-content:center;align-items:flex-start;
   -webkit-user-select:none;user-select:none;touch-action:manipulation}
 
 /* ── BG & CREDIT ── */
-.bg{position:fixed;inset:0;z-index:0;
-  background:radial-gradient(ellipse 55% 38% at 18% 8%,rgba(8,72,195,.28) 0%,transparent 65%),
-  radial-gradient(ellipse 45% 45% at 82% 88%,rgba(4,44,150,.20) 0%,transparent 65%),var(--bg)}
-.bg-green{position:fixed;inset:0;z-index:0;
-  background:radial-gradient(ellipse 55% 38% at 18% 8%,rgba(0,80,30,.45) 0%,transparent 65%),
-  radial-gradient(ellipse 45% 45% at 82% 88%,rgba(0,60,20,.35) 0%,transparent 65%),#040f07;
-  display:none}
+.bg{position:fixed;inset:0;z-index:0;background:var(--bg);}
+.bg-green{position:fixed;inset:0;z-index:0;background:var(--bg);display:none}
 
 .credit-text {
   position: absolute; top: 18px; left: 16px; z-index: 100;
@@ -38,9 +33,14 @@ body{font-family:-apple-system,system-ui,sans-serif;color:var(--t1);
   letter-spacing: 0.5px; pointer-events: none;
 }
 
+/* ── HIDE INPUT SPINNER ── */
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+input[type=number] { -moz-appearance: textfield; }
+
 /* ── SHELL ── */
 .shell{position:relative;z-index:1;width:100%;max-width:393px;height:100vh;
-  overflow-y:auto;overflow-x:hidden;padding:52px 16px 48px;
+  overflow-y:auto;overflow-x:hidden;padding:52px 16px 100px;
   display:flex;flex-direction:column;gap:10px;-webkit-overflow-scrolling:touch}
 .shell::-webkit-scrollbar{display:none}
 
@@ -88,11 +88,16 @@ body{font-family:-apple-system,system-ui,sans-serif;color:var(--t1);
 .dot.acc-g{background:#fff;box-shadow:0 0 11px rgba(255,255,255,.7)}
 
 /* ── SLIDER ── */
-.sl-wrap{padding:0 2px 12px}
-input[type=range]{-webkit-appearance:none;width:100%;height:3px;border-radius:2px;outline:none;cursor:pointer;
-  background:linear-gradient(to right,var(--rng-c,var(--accent)) var(--pct,40%),var(--sep) var(--pct,40%))}
-input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;
-  background:white;box-shadow:0 2px 7px rgba(0,0,0,.5);cursor:pointer}
+.sl-wrap{padding:10px 2px 20px}
+input[type=range]{-webkit-appearance:none;width:100%;height:6px;border-radius:3px;outline:none;cursor:pointer;
+  background:linear-gradient(to right,var(--rng-c,var(--accent)) var(--pct,40%),var(--sep) var(--pct,40%)); transition: background 0.2s;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:28px;height:28px;border-radius:50%;
+  background:#fff;box-shadow:0 3px 8px rgba(0,0,0,0.3);cursor:pointer; transition:transform 0.1s;}
+input[type=range]::-webkit-slider-thumb:active { transform: scale(1.2); }
+
+/* Fix Shell Padding agar tidak tertutup nav */
+.shell { padding-bottom: 120px !important; }
+input[type=range]::-webkit-slider-thumb:active { transform:scale(1.15); }
 
 /* ── TAP ── */
 .tap-btn{margin:0 0 0;padding:10px 0;background:rgba(255,255,255,.04);border:1px solid var(--sep);
@@ -161,29 +166,15 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
 .subdiv-input:focus { border-color: var(--accent); }
 
 /* ── MAIN BTN ── */
-.main-btn{width:100%;padding:17px;border-radius:20px;border:1px solid rgba(255,255,255,.14);
+.main-btn{width:100%;padding:17px;border-radius:16px;border:none;
   font-size:17px;font-weight:600;cursor:pointer;color:white;
-  background:linear-gradient(155deg,rgba(10,132,255,.84),rgba(0,60,195,.93));
-  box-shadow:0 1px 0 rgba(255,255,255,.17) inset,0 7px 26px rgba(10,132,255,.30);
-  transition:transform .12s,background .25s;position:relative;overflow:hidden;flex-shrink:0}
-.main-btn::before{content:'';position:absolute;top:0;left:0;right:0;height:42%;
-  background:linear-gradient(to bottom,rgba(255,255,255,.10),transparent);pointer-events:none}
-.main-btn.stop{background:linear-gradient(155deg,rgba(255,69,58,.87),rgba(200,18,12,.93));
-  box-shadow:0 1px 0 rgba(255,255,255,.14) inset,0 7px 26px rgba(255,69,58,.28)}
-.main-btn:active{transform:scale(.97)}
+  background:var(--accent);
+  transition:transform .12s,opacity .25s;position:relative;overflow:hidden;flex-shrink:0}
+.main-btn.stop{background:var(--red);}
+.main-btn:active{transform:scale(.95); opacity:0.8;}
 
 /* ── PARTITUR BTN ── */
-.partur-btn{width:100%;padding:15px;border-radius:18px;
-  border:1px solid rgba(48,209,88,.28);font-size:15px;font-weight:600;
-  cursor:pointer;color:var(--green);
-  background:rgba(48,209,88,.10);
-  box-shadow:0 1px 0 rgba(255,255,255,.10) inset,0 4px 18px rgba(48,209,88,.12);
-  transition:transform .12s,background .18s;
-  position:relative;overflow:hidden;flex-shrink:0;display:none}
-.partur-btn::before{content:'';position:absolute;top:0;left:0;right:0;height:44%;
-  background:linear-gradient(to bottom,rgba(255,255,255,.07),transparent);pointer-events:none}
-.partur-btn.visible{display:block}
-.partur-btn:active{transform:scale(.97);background:rgba(48,209,88,.18)}
+.partur-btn{display:none !important;}
 
 /* ── NOW PLAYING (Free play only) ── */
 .np-bar{display:none;align-items:center;gap:8px;padding:8px 14px;
@@ -299,6 +290,13 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
   border:1px solid var(--sep);color:var(--t2);font-size:14px;font-weight:500;cursor:pointer;transition:all .15s}
 .sec-pill.on{background:rgba(10,132,255,.2);border-color:rgba(10,132,255,.36);color:var(--accent)}
 
+/* DJ Mode Scroller */
+.dj-bar-scroller::-webkit-scrollbar{height:4px;display:block;}
+.dj-bar-scroller::-webkit-scrollbar-thumb{background:rgba(48,209,88,0.3);border-radius:10px;}
+.dj-bar-pill{padding:8px 16px;border-radius:12px;background:rgba(48,209,88,.08);border:1px solid rgba(48,209,88,.2);color:var(--green);font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all 0.2s;-webkit-user-drag:none;}
+.dj-bar-pill.on{background:rgba(48,209,88,.25);border-color:rgba(48,209,88,.6);box-shadow:0 0 10px rgba(48,209,88,0.3);color:#fff;}
+.dj-bar-pill.playing{background:var(--green);color:#fff;border-color:var(--green);box-shadow:0 0 12px rgba(48,209,88,.5);transform:scale(1.05);}
+
 /* ══ PARTITUR DETAIL SHEET ══ */
 .sheet-bg{position:fixed;inset:0;z-index:300;
   background:rgba(0,0,0,.5);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
@@ -373,16 +371,12 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
 .partur-info-name{font-size:13px;font-weight:700;letter-spacing:.5px;color:var(--green)}
 .partur-info-prog{font-size:12px;color:rgba(255,255,255,.5)}
 
-.main-btn-g{width:100%;padding:17px;border-radius:20px;
-  border:1px solid rgba(48,209,88,.28);font-size:17px;font-weight:600;cursor:pointer;color:#fff;
-  background:linear-gradient(155deg,rgba(48,209,88,.70),rgba(0,140,50,.85));
-  box-shadow:0 1px 0 rgba(255,255,255,.17) inset,0 7px 26px rgba(48,209,88,.22);
-  transition:transform .12s,background .25s;position:relative;overflow:hidden;flex-shrink:0}
-.main-btn-g::before{content:'';position:absolute;top:0;left:0;right:0;height:42%;
-  background:linear-gradient(to bottom,rgba(255,255,255,.10),transparent);pointer-events:none}
-.main-btn-g.stop{background:linear-gradient(155deg,rgba(255,69,58,.87),rgba(200,18,12,.93));
-  border-color:rgba(255,69,58,.3);box-shadow:0 1px 0 rgba(255,255,255,.14) inset,0 7px 26px rgba(255,69,58,.28)}
-.main-btn-g:active{transform:scale(.97)}
+.main-btn-g{width:100%;padding:17px;border-radius:16px;
+  border:none;font-size:17px;font-weight:600;cursor:pointer;color:#fff;
+  background:var(--green);
+  transition:transform .12s,opacity .25s;position:relative;overflow:hidden;flex-shrink:0}
+.main-btn-g.stop{background:var(--red);}
+.main-btn-g:active{transform:scale(.95); opacity: 0.8;}
 .range-card{background:rgba(48,209,88,.07);border:1px solid rgba(48,209,88,.2);border-radius:16px;padding:12px 16px;display:flex;flex-direction:column;gap:12px;flex-shrink:0}
 .range-info{font-size:12px;color:rgba(255,255,255,.6);text-align:right;font-weight:500;margin-bottom:-6px}
 .range-row{display:flex;align-items:center;justify-content:space-between}
@@ -393,55 +387,112 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
 .btn-habis{background:rgba(48,209,88,.15);border:1px solid rgba(48,209,88,.3);color:var(--green);border-radius:8px;padding:6px 10px;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s}
 .btn-habis:active{transform:scale(.95);background:rgba(48,209,88,.25)}
 
+/* ── BOTTOM NAV ── */
+.bottom-nav {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+  display: flex; align-items: center; gap: 12px; padding: 8px 12px; border-radius: 36px;
+  background: rgba(28,28,30,0.85); border: 1px solid rgba(255,255,255,0.12);
+  backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur);
+  z-index: 900; box-shadow: 0 16px 40px rgba(0,0,0,0.6);
+}
+.nav-item {
+  width: 48px; height: 48px; border-radius: 50%; color: rgba(235,235,245,0.5);
+  cursor: pointer; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  display: flex; align-items: center; justify-content: center; background: transparent;
+}
+.nav-item:hover { transform: translateY(-2px); color: var(--t1); }
+.nav-item:active { transform: scale(0.85); }
+.nav-item.active { background: rgba(255,255,255,0.15); color: var(--t1); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+.nav-icon { font-size: 24px; line-height: 1; }
+
+.nav-play {
+  width: 0; height: 48px; border-radius: 50%; 
+  background: linear-gradient(135deg, #30D158, #249A41);
+  box-shadow: 0 4px 16px rgba(48,209,88,0.4), inset 0 1px 0 rgba(255,255,255,0.2);
+  cursor: pointer; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  display: flex; align-items: center; justify-content: center;
+  transform: scale(0); margin: 0; opacity: 0; overflow: hidden;
+}
+.nav-play.show {
+  width: 48px; transform: scale(1); margin: 0 4px; opacity: 1; overflow: visible;
+}
+.nav-play:active { transform: scale(0.85); background: #249A41; }
+
+/* ── TABS LOGIC ── */
+.tab-content { display: none; }
+.tab-content.active { display: contents; } 
+
 /* ── INTRO ANIMATION ── */
 @keyframes introTextSlide {
   0% { opacity: 0; transform: translateY(15px); filter: blur(5px); }
   100% { opacity: 1; transform: translateY(0); filter: blur(0); }
 }
-@keyframes introLine {
-  0% { width: 0; opacity: 0; }
-  100% { width: 60px; opacity: 1; }
-}
+
 .intro-overlay {
   position: fixed; inset: 0; z-index: 9999;
   background: radial-gradient(circle at center, #141428 0%, #08080f 100%);
   display: flex; flex-direction: column; align-items: center; justify-content: center;
   text-align: center; padding: 20px;
-  transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1), transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  /* Mempercepat transisi keluar agar tidak terasa stuck */
+  transition: opacity 0.8s ease-in-out, visibility 0.8s;
+  visibility: visible;
+  opacity: 1;
 }
 .intro-overlay.hide {
   opacity: 0;
-  transform: scale(1.05);
+  visibility: hidden;
   pointer-events: none;
 }
+.intro-box {
+  position: relative; width: 100%; max-width: 360px;
+  background: transparent;
+  text-align: center;
+  animation: introTextSlide 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+.intro-close { display: none !important; }
+
+/* Animasi Partikel Emas */
+.particles-wrap { position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 1; border-radius: 24px; }
+.particle {
+  position: absolute; background: radial-gradient(circle, #ffd700 0%, rgba(255,215,0,0) 70%);
+  border-radius: 50%; opacity: 0; animation: floatUp var(--dur) infinite ease-in-out;
+}
+@keyframes floatUp {
+  0% { transform: translateY(120px) scale(0); opacity: 0; }
+  50% { opacity: 0.6; transform: translateY(0) scale(1.5); }
+  100% { transform: translateY(-120px) scale(0); opacity: 0; }
+}
+
 .intro-title {
-  font-size: 26px; font-weight: 800; max-width: 85%;
+  font-size: 22px; font-weight: 800;
   line-height: 1.3; letter-spacing: 0.5px;
   background: linear-gradient(135deg, #ffffff 0%, #8ca4d8 100%);
   -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  animation: introTextSlide 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 }
 .intro-line {
-  height: 3px; border-radius: 2px;
-  background: rgba(10,132,255,0.8);
-  box-shadow: 0 0 12px rgba(10,132,255,0.6);
-  margin: 18px 0;
-  animation: introLine 1s cubic-bezier(0.2, 0.8, 0.2, 1) 0.6s forwards;
-  opacity: 0;
+  height: 3px; border-radius: 2px; width: 60px; margin: 16px auto;
+  background: var(--accent); box-shadow: 0 0 12px rgba(10,132,255,0.6);
 }
 .intro-subtitle {
-  font-size: 13px; color: rgba(255,255,255,0.4); font-weight: 600; 
-  letter-spacing: 3px; text-transform: uppercase;
-  animation: introTextSlide 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) 0.9s forwards;
-  opacity: 0;
+  font-size: 12px; color: rgba(255,255,255,0.5); font-weight: 600; 
+  letter-spacing: 2px; text-transform: uppercase;
 }
 </style>
 </head>
 <body>
 <div id="introOverlay" class="intro-overlay">
-  <div class="intro-title">Marching Band<br>Atma Jaya Yogyakarta<br><span style="font-size:16px; font-weight:600; color:var(--accent); -webkit-text-fill-color:var(--accent); background:none; text-transform:uppercase; letter-spacing:2px; display:block; margin-top:10px;">Official Metronome</span></div>
-  <div class="intro-line"></div>
-  <div class="intro-subtitle">By Zaim</div>
+  <div class="intro-box">
+    <div class="particles-wrap">
+      <div class="particle" style="width:8px;height:8px;left:15%;--dur:3.2s;animation-delay:0s"></div>
+      <div class="particle" style="width:12px;height:12px;left:35%;--dur:4s;animation-delay:1.5s"></div>
+      <div class="particle" style="width:6px;height:6px;left:55%;--dur:2.5s;animation-delay:0.5s"></div>
+      <div class="particle" style="width:10px;height:10px;left:75%;--dur:3.8s;animation-delay:2s"></div>
+      <div class="particle" style="width:14px;height:14px;left:85%;--dur:4.5s;animation-delay:0.8s"></div>
+    </div>
+    <div class="intro-title" style="position:relative; z-index:2;">Marching Band<br>Atma Jaya Yogyakarta<br><span style="font-size:16px; font-weight:600; color:var(--accent); -webkit-text-fill-color:var(--accent); background:none; text-transform:uppercase; letter-spacing:2px; display:block; margin-top:10px;">Official Metronome</span></div>
+    <div class="intro-line" style="position:relative; z-index:2;"></div>
+    <div class="intro-subtitle" style="position:relative; z-index:2;">By Zaim</div>
+  </div>
 </div>
 
 <div class="bg" id="bgBlue"></div>
@@ -607,11 +658,18 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
   </div>
 </div>
 
+<div class="bottom-nav">
+  <div class="nav-item active" id="navMetro"><span class="nav-icon">⏱️</span></div>
+  <div class="nav-play" id="navPlayPart"><span class="nav-icon" style="color:white; margin-left:4px; font-size:20px;">▶</span></div>
+  <div class="nav-item" id="navPart"><span class="nav-icon">🎼</span></div>
+</div>
+
 <div class="shell" id="mainShell">
   <div class="credit-text">Achmad Zaim</div>
 
-  <div class="card bpm-card" id="bpmCard">
-    <div class="bpm-tag">Tempo</div>
+  <div class="tab-content active" id="tabMetro">
+    <div class="card bpm-card" id="bpmCard">
+      <div class="bpm-tag">Tempo</div>
     <div style="display:flex;align-items:center;justify-content:center">
       <div class="bpm-num" id="bpmNum">120</div>
       <input class="bpm-field" id="bpmField" type="number" min="20" max="300" inputmode="numeric" style="color:var(--accent)">
@@ -682,23 +740,20 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
   </div>
 
   <button class="main-btn" id="mainBtn">▶&nbsp;&nbsp;Start</button>
-  <button class="partur-btn" id="parturBtn">🎼&nbsp;&nbsp;Main dengan Partitur</button>
   <div class="np-bar" id="npBar"><div class="np-dot"></div><div class="np-text" id="npText">Playing</div></div>
-  <div class="pheader">
-    <div class="ptitle">Partitur</div>
-    <div class="p-add-btn" id="pAddBtn">+</div>
-  </div>
-  <div class="partitur-grid" id="partiturGrid"></div>
-  <div style="height:8px;flex-shrink:0"></div>
+  </div> <div class="tab-content" id="tabPart">
+    <button class="partur-btn" id="parturBtn" style="display:none;">🎼&nbsp;&nbsp;Main dengan Partitur</button>
+    <div class="pheader">
+      <div class="ptitle">Partitur</div>
+      <div class="p-add-btn" id="pAddBtn">+</div>
+    </div>
+    <div class="partitur-grid" id="partiturGrid"></div>
+  </div> <div style="height:8px;flex-shrink:0"></div>
 </div>
 
 <div id="playScreen">
   <div class="bg-green" style="position:fixed;inset:0;display:block"></div>
   <div class="play-shell">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; padding:0 4px;">
-      <div style="font-size:12px; color:rgba(255,255,255,0.5); font-weight:600; text-transform:uppercase; letter-spacing:1px;">Tempo: <span id="pCurrTempo" style="color:var(--green); font-weight:800;">120</span></div>
-      <div style="font-size:12px; color:rgba(255,255,255,0.5); font-weight:600; text-transform:uppercase; letter-spacing:1px;">Bar: <span id="pCurrBar" style="color:#fff; font-weight:800;">1</span></div>
-    </div>
     <div class="back-btn" id="backBtn">← Kembali ke Beranda</div>
     <div class="partur-info" id="parturInfo">
       <div class="partur-info-name" id="parturInfoName">Nama Partitur</div>
@@ -721,6 +776,10 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
         <div id="countInTextG" class="count-in-anim" style="display:none; font-size:42px; font-weight:300; color:#fff; letter-spacing:1px;">Count in</div>
         
         <div id="playProgressG" style="display:none; flex-direction:column; align-items:center; justify-content:center; gap:2px;">
+            <div style="display:flex; gap:16px; margin-bottom:8px;">
+              <div style="font-size:13px; color:rgba(255,255,255,0.7); font-weight:600; text-transform:uppercase; letter-spacing:1px;">Tempo: <span id="pCurrTempo" style="color:var(--green); font-weight:800;">120</span></div>
+              <div style="font-size:13px; color:rgba(255,255,255,0.7); font-weight:600; text-transform:uppercase; letter-spacing:1px;"><span id="pCurrBar" style="display:none;">1</span></div>
+            </div>
             <div id="playBarTextG" style="font-size:56px; font-weight:200; line-height:1; letter-spacing:-2px; color:#fff;">Bar 1/8</div>
             <div id="playSigTextG" style="font-size:22px; font-weight:600; color:var(--green); letter-spacing:2px;">4/4</div>
         </div>
@@ -733,9 +792,9 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
         <div class="pg-pill on" data-v="normal">Normal Mode</div>
         <div class="pg-pill" data-v="dj">DJ Mode</div>
       </div>
-      <div id="djBarSelectWrap" style="display:none; flex-direction:column; align-items:center; margin-bottom:12px;">
+      <div id="djBarSelectWrap" style="display:none; flex-direction:column; align-items:flex-start; margin-bottom:12px; width:100%; overflow:hidden;">
         <div style="font-size:12px; color:rgba(255,255,255,.6); margin-bottom:6px;">Pilih Bar</div>
-        <input type="number" id="djBarInputG" class="range-input" style="width:80px;" min="1" value="1">
+        <div id="djBarScrollerG" class="dj-bar-scroller" style="display:flex; overflow-x:auto; gap:8px; width:100%; padding:4px 0; scroll-behavior:smooth;"></div>
       </div>
       <div id="djModeWrapG" style="display:none; justify-content:center; gap:8px; margin-bottom:12px; flex-wrap:wrap;"></div>
       <div class="dots-row" id="dotsRowG"></div>
@@ -778,6 +837,10 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;heigh
     </div>
 
     <div class="range-card" id="rangeCard">
+      <div style="margin-bottom:12px; border-bottom:1px solid rgba(48,209,88,.15); padding-bottom:10px;">
+        <div style="font-size:14px; font-weight:700; color:var(--green); margin-bottom:2px; letter-spacing:0.5px;">Pick Play</div>
+        <div style="font-size:11px; color:rgba(255,255,255,0.45); line-height:1.4;">Pilih mulai dari bar berapa sampai bar berapa untuk mempermudah latihan atau fokus pada bagian tertentu.</div>
+      </div>
       <div class="range-info">Total: <strong id="totBarsText" style="color:var(--green)">0</strong> bar</div>
       <div class="range-row">
         <label>Mulai dari bar</label>
@@ -893,7 +956,7 @@ const tempoNameG=document.getElementById('tempoNameG');
 const dotsRowG=document.getElementById('dotsRowG');
 const modeGroupG=document.getElementById('modeGroupG');
 const djBarSelectWrap=document.getElementById('djBarSelectWrap');
-const djBarInputG=document.getElementById('djBarInputG');
+const djBarScrollerG=document.getElementById('djBarScrollerG');
 const djModeWrapG=document.getElementById('djModeWrapG');
 const tapBtnG=document.getElementById('tapBtnG');
 const aksenToggleG=document.getElementById('aksenToggleG');
@@ -960,17 +1023,28 @@ function renderPtRules() {
   ptList.innerHTML = '';
   partiturTempoRules.forEach((rule, i) => {
     const row = document.createElement('div');
-    row.style.display = 'flex'; row.style.gap = '6px'; row.style.alignItems = 'center';
+    row.style.cssText = "display:grid; grid-template-columns: 1fr 1fr 1fr auto; gap:6px; align-items:center; background:rgba(255,255,255,0.03); padding:8px; border-radius:8px;";
     row.innerHTML = `
-      <input type="number" class="ial-input" style="margin:0; padding:6px; font-size:13px;" placeholder="Dari" value="${rule.s}" onchange="partiturTempoRules[${i}].s=parseInt(this.value)||1">
-      <span style="color:var(--t2); font-size:12px;">-</span>
-      <input type="number" class="ial-input" style="margin:0; padding:6px; font-size:13px;" placeholder="Sampai" value="${rule.e}" onchange="partiturTempoRules[${i}].e=parseInt(this.value)||1">
-      <span style="color:var(--t2); font-size:12px;">@</span>
-      <input type="number" class="ial-input" style="margin:0; padding:6px; font-size:13px;" placeholder="BPM" value="${rule.t}" onchange="partiturTempoRules[${i}].t=parseInt(this.value)||120">
-      <button style="background:rgba(255,69,58,.2); border:none; color:var(--red); border-radius:6px; width:28px; height:28px; font-weight:bold; cursor:pointer;" onclick="partiturTempoRules.splice(${i},1); window.renderPtRules()">×</button>
+      <div><label style="font-size:9px; color:var(--t3); display:block;">DARI BAR</label>
+      <input type="number" class="ial-input" style="margin:0; padding:6px; font-size:13px;" value="${rule.s}" onchange="validatePtRule(${i}, 's', this.value)"></div>
+      <div><label style="font-size:9px; color:var(--t3); display:block;">SAMPAI BAR</label>
+      <input type="number" class="ial-input" style="margin:0; padding:6px; font-size:13px;" value="${rule.e}" onchange="validatePtRule(${i}, 'e', this.value)"></div>
+      <div><label style="font-size:9px; color:var(--t3); display:block;">TEMPO (BPM)</label>
+      <input type="number" class="ial-input" style="margin:0; padding:6px; font-size:13px; color:var(--green);" value="${rule.t}" onchange="partiturTempoRules[${i}].t=parseInt(this.value)||120"></div>
+      <button style="background:rgba(255,69,58,.15); border:1px solid rgba(255,69,58,0.3); color:var(--red); border-radius:6px; width:32px; height:32px; font-weight:bold; cursor:pointer; align-self:end;" onclick="partiturTempoRules.splice(${i},1); renderPtRules()">×</button>
     `;
     ptList.appendChild(row);
   });
+}
+
+function validatePtRule(idx, field, val) {
+  let v = parseInt(val) || 1;
+  if (field === 's') partiturTempoRules[idx].s = v;
+  if (field === 'e') {
+    if (v < partiturTempoRules[idx].s) v = partiturTempoRules[idx].s;
+    partiturTempoRules[idx].e = v;
+  }
+  renderPtRules();
 }
 window.renderPtRules = renderPtRules;
 
@@ -1233,41 +1307,49 @@ function playDrumTick(isAcc, when) {
 }
 
 function runCountIn(beats, bars, isGreen, callback){
-  if(bars === 0){ callback(ctx.currentTime + 0.05); return; }
+  if(bars === 0){ 
+    console.log("Count-in di-skip (0 Bar), langsung eksekusi callback metronome.");
+    callback(ctx.currentTime + 0.05); 
+    return; 
+  }
+  console.log(`▶ MULAI COUNT-IN: ${bars} Bar, ${beats} Ketuk/Bar, Tempo ${tempo} BPM`);
   isCountingIn = true;
   let totalBeats = beats * bars;
   let currentBeat = 0;
   let nextTime = ctx.currentTime + 0.05;
 
   function scheduler(){
-    if(!isCountingIn) return; 
-    while(nextTime < ctx.currentTime + 0.12){
-      if(currentBeat >= totalBeats){
-        isCountingIn = false;
-        callback(nextTime); 
-        return; 
+        if(!isCountingIn) return; 
+        while(nextTime < ctx.currentTime + 0.12){
+          if(currentBeat >= totalBeats){
+            console.log("⏹ COUNT-IN SELESAI, menjalankan startMetronome() (callback).");
+            isCountingIn = false;
+            callback(nextTime); 
+            return; 
+          }
+          let bi = currentBeat % beats;
+          let nt = nextTime;
+          
+          // Suara synth drum (Snare di beat 1, Hi-hat di sisa beat)
+          playDrumTick(bi === 0, nt);
+
+          setTimeout(()=>{
+            if(!isCountingIn) return;
+            const row = isGreen ? dotsRowG : dotsRow;
+            buildDots(row, beats);
+            lightDot(row, bi, bi===0, isGreen);
+          }, Math.max(0, (nt - ctx.currentTime)*1000));
+
+          nextTime += 60/tempo;
+          currentBeat++;
+        }
+        countInTimer = setTimeout(scheduler, 25);
       }
-      let bi = currentBeat % beats;
-      let nt = nextTime;
-      let isAcc = (bi === 0);
-      let row = isGreen ? dotsRowG : dotsRow;
-
-      playDrumTick(isAcc, nt); 
-      setTimeout(()=>{
-        if(!isCountingIn) return;
-        buildDots(row, beats);
-        lightDot(row, bi, isAcc, isGreen);
-      }, Math.max(0, (nt - ctx.currentTime)*1000));
-
-      nextTime += 60/tempo;
-      currentBeat++;
+      console.log("Memulai eksekusi fungsi Count-In...");
+      scheduler();
     }
-    countInTimer = setTimeout(scheduler, 25);
-  }
-  scheduler();
-}
 
-function stopCountIn() {
+    function stopCountIn() {
   isCountingIn = false;
   if(countInTimer) clearTimeout(countInTimer);
   countInTimer = null;
@@ -1362,6 +1444,13 @@ function getSecAndBarFromAbsolute(absBar) {
 function updateProgDisplaySpecific(sIdx, bIdx, sig, absBar, isFirstBeat, activeBpm){
   if(!isFirstBeat) return;
   const p = parturList[activeParturIdx];
+  
+  // Highlight bar yang sedang berjalan di scroller beserta pola modifikasi DJ-nya
+  if(playModeG === 'dj') {
+    activeDjBarG = absBar;
+    renderDjBarScroller(absBar);
+    buildDjModeG(sig, djModeWrapG, absBar);
+  }
   const s = p.sections[sIdx];
   if(!s) return;
   
@@ -1509,12 +1598,14 @@ btnHabis.addEventListener('click', () => endBarInput.value = totalBarsInActive);
 // ══════════ MAIN BTNS ══════════
 mainBtn.addEventListener('click',async()=>{
   ensureCtx();
+  console.log("Tombol Start (Free Play) diklik.");
   if(freeRunning || isCountingIn){
     const ok=await alert2('Hentikan?','Beat sedang berjalan.',{cancelLabel:'Batal',okLabel:'Hentikan'});
     if(!ok)return; stopFree(); return;
   }
   mainBtn.textContent='■\u00a0\u00a0Stop'; mainBtn.classList.add('stop');
   npBar.classList.add('show');
+  console.log("Memanggil fungsi Count-In sebelum Metronome berjalan...");
   runCountIn(globalBeats, countInBarsFree, false, (startTime)=>{
     if(!mainBtn.classList.contains('stop')) return; 
     freeRunning=true; freeCurBeat=0; freeNextTick=startTime; 
@@ -1524,12 +1615,10 @@ mainBtn.addEventListener('click',async()=>{
 });
 
 function updateParturBtn(){
-  if(parturList.length>0){
-    parturBtn.classList.add('visible'); parturBtn.textContent='🎼\u00a0\u00a0Main dengan Partitur';
-  } else { parturBtn.classList.remove('visible'); }
+  // Fungsi lama dihilangkan, kontrol play sekarang ada di bottom nav
 }
 
-parturBtn.addEventListener('click',async()=>{
+navPlayPart.addEventListener('click',async()=>{
   ensureCtx();
   if(!parturList.length){
     await alert2('Belum ada partitur','Buat partitur dulu dengan menekan tombol + di bagian Partitur.',{okLabel:'OK'}); return;
@@ -1540,6 +1629,7 @@ parturBtn.addEventListener('click',async()=>{
 
 mainBtnG.addEventListener('click',async()=>{
   ensureCtx();
+  console.log("Tombol Start (Partitur) diklik.");
   if(freeRunning) stopFree(); 
   if(pRunning || isCountingIn){
     const ok=await alert2('Hentikan?','Beat sedang berjalan.',{cancelLabel:'Batal',okLabel:'Hentikan'});
@@ -1588,9 +1678,14 @@ mainBtnG.addEventListener('click',async()=>{
       updateProgDisplaySpecific(pSecIdx, pBarIdx, s.sig, pAbsBar, true, activeBpm);
   }
 
+  console.log("Memanggil fungsi Count-In Partitur...");
   runCountIn(s.sig, countInBarsPart, true, (startTime)=>{
-    if(!mainBtnG.classList.contains('stop')) return; 
+    if(!mainBtnG.classList.contains('stop')) {
+        console.log("Start dibatalkan karena tombol stop ditekan saat count-in.");
+        return; 
+    }
     
+    console.log("Count-in selesai. Metronome Partitur mulai berjalan...");
     pRunning = true; pNextTick = startTime; 
     buildDots(dotsRowG, s.sig);
     
@@ -1687,15 +1782,48 @@ randomVolOkBtn.onclick = () => {
   randomVolAl.classList.remove('show');
 };
 
+let activeDjBarG = 1;
+function renderDjBarScroller(playingAbsBar = null) {
+  const container = document.getElementById('djBarScrollerG');
+  if(!container) return;
+  container.innerHTML = '';
+  
+  for(let i=1; i<=totalBarsInActive; i++) {
+    const pill = document.createElement('div');
+    pill.className = 'dj-bar-pill';
+    if(i === activeDjBarG) pill.classList.add('on');
+    if(playingAbsBar === i) pill.classList.add('playing');
+    pill.textContent = 'Bar ' + i;
+    
+    pill.onclick = () => {
+      activeDjBarG = i;
+      // Jika metronome mati, reset parameter auto-scroll ke null agar tidak melompat ke bar sebelumnya
+      renderDjBarScroller(pRunning ? playingAbsBar : null); 
+      const loc = getSecAndBarFromAbsolute(i);
+      const sig = parturList[activeParturIdx].sections[loc.secIdx].sig;
+      buildDjModeG(sig, djModeWrapG, i);
+    };
+    container.appendChild(pill);
+  }
+  
+  // Jika sedang dimainkan, geser scroller agar bar aktif berada di tengah
+  if(playingAbsBar) {
+    const activePill = container.children[playingAbsBar - 1];
+    if (activePill) {
+      const scrollPos = activePill.offsetLeft - (container.offsetWidth / 2) + (activePill.offsetWidth / 2);
+      container.scrollTo({ left: scrollPos, behavior: 'smooth' });
+    }
+  }
+}
 function buildDjModeG(beats, container, absBar) {
   container.innerHTML = '';
-  if (!partiturDjPatterns[absBar]) {
-      let pat = Array(beats * 4).fill(false);
-      for(let i=0; i<beats; i++) pat[i*4] = true;
-      partiturDjPatterns[absBar] = pat;
+  if(!partiturDjPatterns[absBar]) {
+    let pat = Array(beats * 4).fill(false);
+    for(let i=0; i<beats; i++) pat[i*4] = true;
+    partiturDjPatterns[absBar] = pat;
   }
   let pat = partiturDjPatterns[absBar];
-
+  
   for (let i = 0; i < beats; i++) {
     const group = document.createElement('div');
     group.style.display = 'flex'; group.style.gap = '2px';
@@ -1716,16 +1844,6 @@ function buildDjModeG(beats, container, absBar) {
   }
 }
 
-djBarInputG.addEventListener('change', () => {
-    let bar = parseInt(djBarInputG.value);
-    if (isNaN(bar) || bar < 1) bar = 1;
-    if (bar > totalBarsInActive) bar = totalBarsInActive;
-    djBarInputG.value = bar;
-    const loc = getSecAndBarFromAbsolute(bar);
-    const sig = parturList[activeParturIdx].sections[loc.secIdx].sig;
-    buildDjModeG(sig, djModeWrapG, bar);
-});
-
 modeGroup.addEventListener('click', e => {
   const p = e.target.closest('.pg-pill'); if(!p) return;
   modeGroup.querySelectorAll('.pg-pill').forEach(x => x.classList.remove('on'));
@@ -1739,7 +1857,11 @@ modeGroupG.addEventListener('click', e => {
   if (playModeG === 'dj') {
     djModeWrapG.style.display = 'flex';
     djBarSelectWrap.style.display = 'flex';
-    djBarInputG.dispatchEvent(new Event('change'));
+    renderDjBarScroller();
+    const loc = getSecAndBarFromAbsolute(activeDjBarG);
+    if(parturList[activeParturIdx] && parturList[activeParturIdx].sections[loc.secIdx]) {
+        buildDjModeG(parturList[activeParturIdx].sections[loc.secIdx].sig, djModeWrapG, activeDjBarG);
+    }
   } else {
     djModeWrapG.style.display = 'none';
     djBarSelectWrap.style.display = 'none';
@@ -1917,20 +2039,60 @@ addSecOk.onclick = () => {
 addSecAl.addEventListener('click', e => { if (e.target === addSecAl) addSecAl.classList.remove('show'); });
 
 // ══════════ INIT ══════════
-const savedData = localStorage.getItem('metronome_partitur_v1');
-if(savedData){ try { parturList = JSON.parse(savedData); } catch(e) { console.error(e); } }
+// 1. Ambil data dari storage
+const savedDataInit = localStorage.getItem('metronome_partitur_v1');
+if(savedDataInit){ try { parturList = JSON.parse(savedDataInit); } catch(e) { console.error(e); } }
 
-setTimeout(() => {
-  const intro = document.getElementById('introOverlay');
-  if(intro) {
-    intro.classList.add('hide');
-    setTimeout(() => intro.remove(), 1200);
-  }
-}, 5000);
+// 2. Deklarasi Variabel DOM (Hanya Satu Kali di Sini)
+const navMetroEl = document.getElementById('navMetro');
+const navPartEl = document.getElementById('navPart');
+const navPlayPartEl = document.getElementById('navPlayPart');
+const tabMetroEl = document.getElementById('tabMetro');
+const tabPartEl = document.getElementById('tabPart');
+const introOverlayEl = document.getElementById('introOverlay');
 
-setTempo(120); buildDots(dotsRow,4); buildDots(dotsRowG,4); 
-buildDjMode(4, document.getElementById('djModeWrap'), false);
-buildDjMode(4, document.getElementById('djModeWrapG'), true);
+// 3. Logika Intro Otomatis 5 Detik
+if(introOverlayEl) {
+  document.body.style.overflow = 'hidden';
+  setTimeout(() => {
+    introOverlayEl.classList.add('hide');
+    document.body.style.overflow = 'auto';
+    setTimeout(() => { if (introOverlayEl.parentNode) introOverlayEl.remove(); }, 800);
+  }, 4200);
+}
+
+// 4. Nav Switcher Logic (Dibuat tahan banting terhadap error Reference)
+function runNavigation() {
+  if (!navMetroEl || !navPartEl) return;
+
+  navMetroEl.onclick = () => {
+    navMetroEl.classList.add('active');
+    navPartEl.classList.remove('active');
+    tabMetroEl.classList.add('active');
+    tabPartEl.classList.remove('active');
+    if(navPlayPartEl) navPlayPartEl.classList.remove('show');
+  };
+
+  navPartEl.onclick = () => {
+    navPartEl.classList.add('active');
+    navMetroEl.classList.remove('active');
+    tabPartEl.classList.add('active');
+    tabMetroEl.classList.remove('active');
+    if(navPlayPartEl) navPlayPartEl.classList.add('show');
+  };
+}
+
+// 5. Eksekusi Inisialisasi Akhir
+runNavigation();
+setTempo(tempo); 
+buildDots(dotsRow, globalBeats); 
+buildDots(dotsRowG, 4); 
+
+const djModeWrapFinal = document.getElementById('djModeWrap');
+const djModeWrapGFinal = document.getElementById('djModeWrapG');
+if(djModeWrapFinal) buildDjMode(globalBeats, djModeWrapFinal, false);
+if(djModeWrapGFinal) buildDjMode(4, djModeWrapGFinal, true);
+
 renderPartiturGrid();
 </script>
 </body>
