@@ -408,7 +408,38 @@ input[type=range]::-webkit-slider-thumb:active { transform:scale(1.15); }
   background: rgba(28,28,30,0.85); border: 1px solid rgba(255,255,255,0.12);
   backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur);
   z-index: 900; box-shadow: 0 16px 40px rgba(0,0,0,0.6);
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transform-origin: center;
 }
+.bottom-nav.floating {
+  width: 56px; height: 56px; padding: 0;
+  border-radius: 28px;
+  background: rgba(28,28,30,0.6);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  left: auto; right: 32px; bottom: 32px; transform: none;
+  gap: 0;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  cursor: grab;
+}
+.bottom-nav.floating:active { cursor: grabbing; }
+
+/* Auto-Hide Logic Smooth Animation */
+.bottom-nav.hide {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transform: translateX(-50%) translateY(30px) scale(0.9) !important;
+}
+.bottom-nav.floating.hide {
+  transform: scale(0) !important;
+}
+.bottom-nav.floating .nav-item { display: none; }
+.bottom-nav.floating .nav-item.active {
+  display: flex; width: 100%; height: 100%;
+  background: transparent; box-shadow: none;
+}
+.bottom-nav.floating .nav-play { display: none !important; }
+
 .nav-item {
   width: 48px; height: 48px; border-radius: 50%; color: rgba(235,235,245,0.5);
   cursor: pointer; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -802,16 +833,16 @@ input[type=range]::-webkit-slider-thumb:active { transform:scale(1.15); }
     </div>
 
     <div class="card green-card dots-card">
+      <div class="dots-row" id="dotsRowG" style="margin-bottom:16px;"></div>
       <div class="pg full" id="modeGroupG" style="margin-bottom:12px; background:rgba(0,0,0,.4);">
         <div class="pg-pill on" data-v="normal">Normal Mode</div>
         <div class="pg-pill" data-v="dj">DJ Mode</div>
       </div>
-      <div id="djBarSelectWrap" style="display:none; flex-direction:column; align-items:flex-start; margin-bottom:12px; width:100%; overflow:hidden;">
-        <div style="font-size:12px; color:rgba(255,255,255,.6); margin-bottom:6px;">Pilih Bar</div>
+      <div id="djBarSelectWrap" style="display:flex; flex-direction:column; align-items:flex-start; margin-bottom:12px; width:100%; overflow:hidden;">
+        <div style="font-size:12px; color:rgba(255,255,255,.6); margin-bottom:6px;">Pilih Bar / Lompat Partitur</div>
         <div id="djBarScrollerG" class="dj-bar-scroller" style="display:flex; overflow-x:auto; gap:8px; width:100%; padding:4px 0; scroll-behavior:smooth;"></div>
       </div>
       <div id="djModeWrapG" style="display:none; justify-content:center; gap:8px; margin-bottom:12px; flex-wrap:wrap;"></div>
-      <div class="dots-row" id="dotsRowG"></div>
       <div class="sl-wrap"><input type="range" id="sliderG" min="20" max="300" value="120" style="--rng-c:var(--green)"></div>
       <div class="tap-btn" id="tapBtnG" style="color:rgba(255,255,255,.6)">Tap Tempo</div>
       <div class="aksen-row">
@@ -1590,6 +1621,10 @@ function openPlayScreen(idx){
   const initSig = p.sections.length ? p.sections[0].sig : 4;
   buildDots(dotsRowG, initSig);
   partiturDjPatterns = {}; // Reset pola DJ
+  
+  activeDjBarG = 1;
+  renderDjBarScroller(); // Tampilkan scroller bar secara default
+  
   bgGreen.style.display='block';
   playScreen.classList.add('show');
 }
@@ -1811,10 +1846,20 @@ function renderDjBarScroller(playingAbsBar = null) {
     
     pill.onclick = () => {
       activeDjBarG = i;
-      // Jika metronome mati, reset parameter auto-scroll ke null agar tidak melompat ke bar sebelumnya
-      renderDjBarScroller(pRunning ? playingAbsBar : null); 
-      const loc = getSecAndBarFromAbsolute(i);
-      const sig = parturList[activeParturIdx].sections[loc.secIdx].sig;
+      
+      if (pRunning) {
+        // Langsung lompat partitur ke bar yang dipilih tanpa reset ke awal (Sync Timing)
+        const loc = getSecAndBarFromAbsolute(i);
+        pAbsBar = i;
+        pSecIdx = loc.secIdx;
+        pBarIdx = loc.barIdx;
+        pBeatIdx = 0;
+        pNextTick = ctx.currentTime + 0.02; // Jadwalkan ketukan baru secepatnya
+      }
+      
+      renderDjBarScroller(pRunning ? i : null); 
+      const loc2 = getSecAndBarFromAbsolute(i);
+      const sig = parturList[activeParturIdx].sections[loc2.secIdx].sig;
       buildDjModeG(sig, djModeWrapG, i);
     };
     container.appendChild(pill);
@@ -1870,16 +1915,15 @@ modeGroupG.addEventListener('click', e => {
   p.classList.add('on'); playModeG = p.dataset.v;
   if (playModeG === 'dj') {
     djModeWrapG.style.display = 'flex';
-    djBarSelectWrap.style.display = 'flex';
-    renderDjBarScroller();
     const loc = getSecAndBarFromAbsolute(activeDjBarG);
     if(parturList[activeParturIdx] && parturList[activeParturIdx].sections[loc.secIdx]) {
         buildDjModeG(parturList[activeParturIdx].sections[loc.secIdx].sig, djModeWrapG, activeDjBarG);
     }
   } else {
     djModeWrapG.style.display = 'none';
-    djBarSelectWrap.style.display = 'none';
   }
+  // Tetap render scroller bar karena sekarang selalu dipakai di Mode Normal juga
+  renderDjBarScroller(pRunning ? pAbsBar : null); 
 });
 countInGroupG.addEventListener('click', e => {
   const p = e.target.closest('.pg-pill'); if(!p) return;
@@ -2080,6 +2124,10 @@ function runNavigation() {
   if (!navMetroEl || !navPartEl) return;
 
   navMetroEl.onclick = () => {
+    // Stop Partitur & Reset Layar jika sedang bermain
+    if (pRunning || isCountingIn) stopP();
+    closePlayScreen();
+    
     navMetroEl.classList.add('active');
     navPartEl.classList.remove('active');
     tabMetroEl.classList.add('active');
@@ -2096,6 +2144,92 @@ function runNavigation() {
   };
 }
 
+// ══════════ FLOATING NAV BEHAVIOR (SCROLL & DRAG) ══════════
+const bNav = document.querySelector('.bottom-nav');
+let isNavFloating = false;
+let lastScrollY = 0;
+
+function handleNavScroll(e) {
+  const currY = e.target.scrollTop;
+  if (currY > lastScrollY && currY > 20) {
+    if (!isNavFloating) {
+      isNavFloating = true;
+      bNav.classList.add('floating');
+      navX = 0; navY = 0;
+      bNav.style.transform = '';
+    }
+  } else if (currY < lastScrollY) {
+    if (isNavFloating) {
+      isNavFloating = false;
+      bNav.classList.remove('floating');
+      bNav.style.transform = '';
+    }
+  }
+  lastScrollY = currY;
+}
+
+mainShell.addEventListener('scroll', handleNavScroll, {passive: true});
+document.querySelector('.play-shell').addEventListener('scroll', handleNavScroll, {passive: true});
+
+// Auto-Hide Navigasi Saat Input Focus & Popup Modal
+const toggleNavVisibility = (hide) => {
+  if(hide) bNav.classList.add('hide');
+  else bNav.classList.remove('hide');
+};
+
+// 1. Sembunyikan saat sedang mengetik
+document.addEventListener('focusin', (e) => {
+  if(e.target.tagName === 'INPUT' || e.target.type === 'number') toggleNavVisibility(true);
+});
+document.addEventListener('focusout', (e) => {
+  if(e.target.tagName === 'INPUT' || e.target.type === 'number') {
+    // Pastikan tidak ada popup yang sedang terbuka sebelum memunculkan nav kembali
+    if(!document.querySelector('.ial.show, .sheet-bg.show')) toggleNavVisibility(false);
+  }
+});
+
+// 2. Sembunyikan saat Popup/Alert/Sheet terbuka menggunakan MutationObserver
+const popupObserver = new MutationObserver((mutations) => {
+  mutations.forEach((mutation) => {
+    if (mutation.target.classList.contains('show')) {
+      toggleNavVisibility(true);
+    } else if (!document.querySelector('.ial.show, .sheet-bg.show')) {
+      // Munculkan hanya jika focus tidak sedang di input
+      if(document.activeElement.tagName !== 'INPUT') toggleNavVisibility(false);
+    }
+  });
+});
+
+// Pasang observer ke semua class modal
+document.querySelectorAll('.ial, .sheet-bg').forEach(el => {
+  popupObserver.observe(el, { attributes: true, attributeFilter: ['class'] });
+});
+
+// Dragging Logic untuk Nav Floating
+let isDraggingNav = false;
+let navInitialX, navInitialY;
+let navX = 0, navY = 0;
+
+bNav.addEventListener('touchstart', (e) => {
+  if (!isNavFloating) return;
+  isDraggingNav = true;
+  navInitialX = e.touches[0].clientX - navX;
+  navInitialY = e.touches[0].clientY - navY;
+  bNav.style.transition = 'none'; // Matikan transisi agar ngikut jari secara realtime
+}, {passive: true});
+
+bNav.addEventListener('touchmove', (e) => {
+  if (!isDraggingNav || !isNavFloating) return;
+  e.preventDefault(); 
+  navX = e.touches[0].clientX - navInitialX;
+  navY = e.touches[0].clientY - navInitialY;
+  bNav.style.transform = `translate(${navX}px, ${navY}px)`;
+}, {passive: false});
+
+bNav.addEventListener('touchend', () => {
+  isDraggingNav = false;
+  bNav.style.transition = 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)';
+});
 // 5. Eksekusi Inisialisasi Akhir
 runNavigation();
 setTempo(tempo); 
