@@ -22,15 +22,17 @@
     }
 
     :root {
-      --bg: #000000;
-      --glass: rgba(28, 28, 30, 0.7);  --glass-b:rgba(255,255,255,0.08);
-  --glass-b2:rgba(255,255,255,0.15);
-  --accent:#0A84FF;
-  --green:#30D158;
-  --red:#FF453A;
-  --t1:#ffffff;--t2:rgba(235,235,245,0.6);--t3:rgba(235,235,245,0.3);
-  --sep:rgba(84,84,88,0.3);
-  --blur:blur(40px) saturate(200%);
+      --bg: #09090b;
+      --glass: rgba(24, 24, 27, 0.45);
+      --glass-b: rgba(255, 255, 255, 0.1);
+      --glass-b2: rgba(255, 255, 255, 0.05);
+      --glass-highlight: inset 0 1px 1px rgba(255, 255, 255, 0.15);
+      --accent:#0A84FF;
+      --green:#30D158;
+      --red:#FF453A;
+      --t1:#ffffff;--t2:rgba(235,235,245,0.5);--t3:rgba(235,235,245,0.3);
+      --sep:rgba(255,255,255,0.08);
+      --blur:blur(40px) saturate(180%);
 }
 html,body{height:100%;overflow:hidden;background:var(--bg)}
 body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--t1);
@@ -38,8 +40,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Ar
   -webkit-user-select:none;user-select:none;touch-action:manipulation}
 
 /* ── BG & CREDIT ── */
-.bg{position:fixed;inset:0;z-index:0;background:var(--bg);}
-.bg-green{position:fixed;inset:0;z-index:0;background:var(--bg);display:none}
+.bg{position:fixed;inset:0;z-index:0;background:radial-gradient(circle at 50% -20%, #1a1a24 0%, var(--bg) 80%);}
+.bg-green{position:fixed;inset:0;z-index:0;background:radial-gradient(circle at 50% -20%, #102a16 0%, var(--bg) 80%);display:none}
 
 .credit-text {
   position: absolute; top: 18px; left: 16px; z-index: 100;
@@ -59,14 +61,13 @@ input[type=number] { -moz-appearance: textfield; }
 .shell::-webkit-scrollbar{display:none}
 
 /* ── GLASS CARD ── */
-.card{background:var(--glass);border:1px solid var(--glass-b);border-radius:20px;
+.card{background:var(--glass);border:1px solid var(--glass-b);border-radius:24px;
   backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.3), var(--glass-highlight);
   position:relative;overflow:hidden;flex-shrink:0}
-.card::after{content:'';position:absolute;top:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent 8%,var(--glass-b2) 50%,transparent 92%);pointer-events:none}
+.card::after{display:none;}
 /* Green variant */
-.card.green-card{background:rgba(48,209,88,.07);border-color:rgba(48,209,88,.2)}
-.card.green-card::after{background:linear-gradient(90deg,transparent 8%,rgba(48,209,88,.3) 50%,transparent 92%)}
+.card.green-card{background:rgba(48,209,88,.04);border-color:rgba(48,209,88,.15)}
 
 /* ── BPM ── */
 .bpm-card{padding:22px 20px 16px;text-align:center;cursor:pointer;}
@@ -164,13 +165,13 @@ input[type=range]::-webkit-slider-thumb:active { transform:scale(1.15); }
 .rl-main{font-size:15px;font-weight:400}
 .rl-sub{font-size:11px;color:var(--t3)}
 
-.pg{display:flex;gap:4px;padding:2px;background:rgba(0,0,0,.28);border-radius:9px;flex-wrap:wrap;justify-content:flex-end;max-width:65%}
-.pg-pill{padding:5px 10px;border-radius:7px;color:var(--t2);font-size:13px;font-weight:500;
-  cursor:pointer;transition:all .16s;border:1px solid transparent}
-.pg-pill.on{background:rgba(10,132,255,.2);border-color:rgba(10,132,255,.32);color:var(--accent)}
+.pg{display:flex;gap:4px;padding:4px;background:rgba(0,0,0,.3);border-radius:14px;flex-wrap:wrap;justify-content:flex-end;max-width:65%; border:1px solid var(--glass-b); box-shadow:inset 0 2px 8px rgba(0,0,0,0.5)}
+.pg-pill{padding:6px 12px;border-radius:10px;color:var(--t2);font-size:13px;font-weight:500;
+  cursor:pointer;transition:all .25s cubic-bezier(0.34, 1.56, 0.64, 1);border:1px solid transparent}
+.pg-pill.on{background:rgba(255,255,255,.1);border-color:var(--glass-b);color:#fff; box-shadow: 0 4px 12px rgba(0,0,0,0.2), var(--glass-highlight);}
 
 .pg.full { max-width: 100%; width: 100%; display: flex; justify-content: space-between; flex-wrap: nowrap; }
-.pg.full .pg-pill { flex: 1; text-align: center; padding: 7px 2px; font-size: 13px; }
+.pg.full .pg-pill { flex: 1; text-align: center; padding: 8px 2px; font-size: 13px; }
 
 .subdiv-input {
   width: 60px; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.15);
@@ -180,12 +181,13 @@ input[type=range]::-webkit-slider-thumb:active { transform:scale(1.15); }
 .subdiv-input:focus { border-color: var(--accent); }
 
 /* ── MAIN BTN ── */
-.main-btn{width:100%;padding:17px;border-radius:16px;border:none;
+.main-btn{width:100%;padding:17px;border-radius:18px;border:none;
   font-size:17px;font-weight:600;cursor:pointer;color:white;
-  background:var(--accent);
-  transition:transform .12s,opacity .25s;position:relative;overflow:hidden;flex-shrink:0}
-.main-btn.stop{background:var(--red);}
-.main-btn:active{transform:scale(.95); opacity:0.8;}
+  background:linear-gradient(135deg, #0A84FF, #005bb5);
+  box-shadow: 0 8px 24px rgba(10,132,255,0.4), inset 0 1px 1px rgba(255,255,255,0.3);
+  transition:transform .2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow .2s;position:relative;overflow:hidden;flex-shrink:0}
+.main-btn.stop{background:linear-gradient(135deg, #FF453A, #cc1c14); box-shadow: 0 8px 24px rgba(255,69,58,0.4), inset 0 1px 1px rgba(255,255,255,0.3);}
+.main-btn:active{transform:scale(.95); box-shadow: 0 4px 12px rgba(10,132,255,0.3);}
 
 /* ── PARTITUR BTN ── */
 .partur-btn{display:none !important;}
@@ -307,9 +309,9 @@ input[type=range]::-webkit-slider-thumb:active { transform:scale(1.15); }
 /* DJ Mode Scroller */
 .dj-bar-scroller::-webkit-scrollbar{height:4px;display:block;}
 .dj-bar-scroller::-webkit-scrollbar-thumb{background:rgba(48,209,88,0.3);border-radius:10px;}
-.dj-bar-pill{padding:8px 16px;border-radius:12px;background:rgba(48,209,88,.08);border:1px solid rgba(48,209,88,.2);color:var(--green);font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all 0.2s;-webkit-user-drag:none;}
-.dj-bar-pill.on{background:rgba(48,209,88,.25);border-color:rgba(48,209,88,.6);box-shadow:0 0 10px rgba(48,209,88,0.3);color:#fff;}
-.dj-bar-pill.playing{background:var(--green);color:#fff;border-color:var(--green);box-shadow:0 0 12px rgba(48,209,88,.5);transform:scale(1.05);}
+.dj-bar-pill{padding:8px 16px;border-radius:14px;background:rgba(255,255,255,.05);border:1px solid var(--glass-b);color:var(--t2);font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);-webkit-user-drag:none;backdrop-filter:var(--blur);}
+.dj-bar-pill.on{background:rgba(48,209,88,.15);border-color:rgba(48,209,88,.3);color:var(--green);}
+.dj-bar-pill.playing{background:var(--green);color:#fff;border-color:var(--green);box-shadow:0 0 16px rgba(48,209,88,.4);transform:scale(1.05);}
 
 /* ══ PARTITUR DETAIL SHEET ══ */
 .sheet-bg{position:fixed;inset:0;z-index:300;
@@ -370,7 +372,7 @@ input[type=range]::-webkit-slider-thumb:active { transform:scale(1.15); }
 #playScreen input[type=range]{--rng-c:var(--green)}
 #playScreen .tap-btn{color:rgba(255,255,255,.6)}
 #playScreen .aksen-main{color:#fff}
-#playScreen .pg-pill.on{background:rgba(48,209,88,.2);border-color:rgba(48,209,88,.32);color:var(--green)}
+#playScreen .pg-pill.on{background:rgba(255,255,255,.1);border-color:var(--glass-b);color:var(--green);box-shadow:0 4px 12px rgba(0,0,0,0.2), var(--glass-highlight);}
 .back-btn{
   display:flex;align-items:center;gap:8px;padding:11px 18px;background:rgba(48,209,88,.08);
   border:1px solid rgba(48,209,88,.22);border-radius:16px;
@@ -385,12 +387,13 @@ input[type=range]::-webkit-slider-thumb:active { transform:scale(1.15); }
 .partur-info-name{font-size:13px;font-weight:700;letter-spacing:.5px;color:var(--green)}
 .partur-info-prog{font-size:12px;color:rgba(255,255,255,.5)}
 
-.main-btn-g{width:100%;padding:17px;border-radius:16px;
+.main-btn-g{width:100%;padding:17px;border-radius:18px;
   border:none;font-size:17px;font-weight:600;cursor:pointer;color:#fff;
-  background:var(--green);
-  transition:transform .12s,opacity .25s;position:relative;overflow:hidden;flex-shrink:0}
-.main-btn-g.stop{background:var(--red);}
-.main-btn-g:active{transform:scale(.95); opacity: 0.8;}
+  background:linear-gradient(135deg, #30D158, #249A41);
+  box-shadow: 0 8px 24px rgba(48,209,88,0.4), inset 0 1px 1px rgba(255,255,255,0.3);
+  transition:transform .2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow .2s;position:relative;overflow:hidden;flex-shrink:0}
+.main-btn-g.stop{background:linear-gradient(135deg, #FF453A, #cc1c14); box-shadow: 0 8px 24px rgba(255,69,58,0.4), inset 0 1px 1px rgba(255,255,255,0.3);}
+.main-btn-g:active{transform:scale(.95); box-shadow: 0 4px 12px rgba(48,209,88,0.3);}
 .range-card{background:rgba(48,209,88,.07);border:1px solid rgba(48,209,88,.2);border-radius:16px;padding:12px 16px;display:flex;flex-direction:column;gap:12px;flex-shrink:0}
 .range-info{font-size:12px;color:rgba(255,255,255,.6);text-align:right;font-weight:500;margin-bottom:-6px}
 .range-row{display:flex;align-items:center;justify-content:space-between}
@@ -1490,10 +1493,11 @@ function updateProgDisplaySpecific(sIdx, bIdx, sig, absBar, isFirstBeat, activeB
   if(!isFirstBeat) return;
   const p = parturList[activeParturIdx];
   
-  // Highlight bar yang sedang berjalan di scroller beserta pola modifikasi DJ-nya
+  // Sinkronisasi Highlight Bar untuk SEMUA mode (Normal & DJ)
+  activeDjBarG = absBar;
+  renderDjBarScroller(absBar);
+  
   if(playModeG === 'dj') {
-    activeDjBarG = absBar;
-    renderDjBarScroller(absBar);
     buildDjModeG(sig, djModeWrapG, absBar);
   }
   const s = p.sections[sIdx];
@@ -1846,21 +1850,27 @@ function renderDjBarScroller(playingAbsBar = null) {
     
     pill.onclick = () => {
       activeDjBarG = i;
-      
+      const loc = getSecAndBarFromAbsolute(i);
+      pAbsBar = i;
+      pSecIdx = loc.secIdx;
+      pBarIdx = loc.barIdx;
+      pBeatIdx = 0;
+
       if (pRunning) {
-        // Langsung lompat partitur ke bar yang dipilih tanpa reset ke awal (Sync Timing)
-        const loc = getSecAndBarFromAbsolute(i);
-        pAbsBar = i;
-        pSecIdx = loc.secIdx;
-        pBarIdx = loc.barIdx;
-        pBeatIdx = 0;
-        pNextTick = ctx.currentTime + 0.02; // Jadwalkan ketukan baru secepatnya
+        pNextTick = ctx.currentTime + 0.02; // Force eksekusi loop instan
+        
+        // Terapkan konfigurasi tempo bar tujuan secara instan agar sinkron
+        let activeBpm = tempo;
+        for(let r of partiturTempoRules) {
+            if(pAbsBar >= r.s && pAbsBar <= r.e) { activeBpm = r.t; break; }
+        }
+        const sig = parturList[activeParturIdx].sections[loc.secIdx].sig;
+        updateProgDisplaySpecific(loc.secIdx, loc.barIdx, sig, pAbsBar, true, activeBpm);
       }
       
-      renderDjBarScroller(pRunning ? i : null); 
-      const loc2 = getSecAndBarFromAbsolute(i);
-      const sig = parturList[activeParturIdx].sections[loc2.secIdx].sig;
-      buildDjModeG(sig, djModeWrapG, i);
+      renderDjBarScroller(pRunning ? pAbsBar : null); 
+      const sig2 = parturList[activeParturIdx].sections[loc.secIdx].sig;
+      if (playModeG === 'dj') buildDjModeG(sig2, djModeWrapG, i);
     };
     container.appendChild(pill);
   }
