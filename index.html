@@ -1,24 +1,29 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Metronome</title>
 
-<link rel="icon" type="image/png" href="https://github.com/achmadzaim81-collab/metronome/blob/main/icon.png?raw=true">
+  <link rel="icon" type="image/png" href="https://github.com/achmadzaim81-collab/metronome/blob/main/icon.png?raw=true">
+  <link rel="apple-touch-icon" href="https://github.com/achmadzaim81-collab/metronome/blob/main/icon.png?raw=true">
+  
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Metronome">
 
-<link rel="apple-touch-icon" href="https://github.com/achmadzaim81-collab/metronome/blob/main/icon.png?raw=true">
+  <style>
+    /* Reset & Base Styles */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
 
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Metronome">
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Metronome</title>
-<style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-:root{
-  --bg:#000000;
-  --glass:rgba(28,28,30,0.7);
-  --glass-b:rgba(255,255,255,0.08);
+    :root {
+      --bg: #000000;
+      --glass: rgba(28, 28, 30, 0.7);  --glass-b:rgba(255,255,255,0.08);
   --glass-b2:rgba(255,255,255,0.15);
   --accent:#0A84FF;
   --green:#30D158;
